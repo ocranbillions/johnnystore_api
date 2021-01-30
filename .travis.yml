@@ -13,7 +13,6 @@ env:
     - TRAVIS_PORT=5432
     - NODE_ENV=test
 before_install:
-  - npm install -g typescript
   - npm install -g ts-node
   - mysql -e 'CREATE DATABASE IF NOT EXISTS johnny_store_test;'
 script: 

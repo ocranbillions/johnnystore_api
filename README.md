@@ -1,1 +1,2 @@
 # johnnystore_api
+[![Build Status](https://travis-ci.com/ocranbillions/johnnystore_api.svg?branch=main)](https://travis-ci.com/ocranbillions/johnnystore_api) [![Coverage Status](https://coveralls.io/repos/github/ocranbillions/johnnystore_api/badge.svg?branch=main)](https://coveralls.io/github/ocranbillions/johnnystore_api?branch=main)
