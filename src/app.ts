@@ -38,8 +38,5 @@ app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
 });
 
 
-const port = process.env.PORT || 5000;
-app.listen(port, () => {
-  console.log(`App is listening on port ${port}`)
-})
 
+export default app;

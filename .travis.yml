@@ -1,0 +1,22 @@
+cache: 
+  directories: 
+    - node_modules
+language: node_js
+node_js: 
+  - stable
+env:
+  global:
+    - TRAVIS_HOST=127.0.0.1
+    - TRAVIS_USER=root
+    - TRAVIS_DATABASE=johnny_store_test
+    - TRAVIS_PASSWORD=
+    - TRAVIS_PORT=5432
+    - NODE_ENV=test
+before_install:
+  - npm install -g ts-node
+  - mysql -e 'CREATE DATABASE IF NOT EXISTS johnny_store_test;'
+script: 
+  - "npm test"
+  - "npm run coverage"
+services: 
+  - mysql
