@@ -1,42 +1,36 @@
 import express, { Request, Response, NextFunction} from "express";
+import { config } from 'dotenv';
+import morgan from 'morgan';
 import authRoutes from './routes/authRoutes';
-import {config} from 'dotenv';
+import CustomError from './utils/CustomError';
 
 config()
 
 const app = express();
 
 app.use(express.json())
+app.use(morgan("tiny"));
 app.use('/auth', authRoutes)
 
-
-app.get("/", (req, res) => {
-  res.status(200).json({
-    success:true,
-    message: "Welcome to Todoist"
-  })
-})
-
 app.all('*', (req, res) => {
-  return res.status(404).json({
-    errors: [{message: "Page not found"}]
-  })
+  throw new CustomError("Page not found!", 404)
 })
 
 app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
-  const env = process.env.NODE_ENV;
-  if (env === 'development' || env === 'test') {
-    console.log(error.stack)
-    return res.status(500).json({
-      errors: [{message: error.message}]
+
+  if(error instanceof CustomError) {
+    return res.status(error.statusCode).json({
+      message: error.message,
+      errorList: error.errorList
     })
   }
 
+  console.error(error)
   return res.status(500).json({
-    errors: [{message: "something went wrong"}]
+    message: error.message
+    // message: "An error occured!"
   })
+
 });
-
-
 
 export default app;

@@ -6,11 +6,11 @@ const validationRules = (method: string) => {
       return [
         body('name')
           .trim()
-          .isLength({ min: 1 }) // todo update check
+          .not().isEmpty()
           .withMessage('Name cannot be empty'),
         body('email')
           .isEmail()
-          .withMessage('Invalid email'),
+          .withMessage('Email is invalid'),
         body('password')
           .trim()
           .isLength({ min: 6 })
@@ -20,7 +20,7 @@ const validationRules = (method: string) => {
       return [
         body('email')
           .isEmail()
-          .withMessage('Invalid email'),
+          .withMessage('Email is invalid'),
         body('password')
           .trim()
           .isLength({ min: 6 })

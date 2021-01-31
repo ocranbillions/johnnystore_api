@@ -1,24 +1,34 @@
-import {query} from '../db/dbConfig';
+import { query } from '../db/dbConfig';
+import { hashSync } from 'bcryptjs';
 
-interface UserI {
+interface EmpoyeeI {
   name: string
   email: string
   password: string
+  id?: number
 }
 
 export class Employee {
   name: string;
   email: string;
   password: string;
-  constructor(user: UserI) {
+  
+  constructor(user: EmpoyeeI) {
     this.name = user.name;
     this.email = user.email;
-    this.password = user.password // hash
+    this.password = hashSync(user.password, 10);
   }
 
-  create = async () => {
+  create = async (): Promise<number> => {
+    const { name, email, password } = this;
     const sql = `INSERT INTO JohnnyEmployee (name, email, password) VALUES (?, ?, ?)`;
-    const result = await query(sql, [this.name, this.email, this.password]);
+    const result = await query(sql, [name, email, password]);
+    return result.insertId!;
+  }
+
+  static findOne = async(email: string): Promise<EmpoyeeI> => {
+    const sql = `SELECT * from JohnnyEmployee WHERE email = ?`;
+    const [result]= await query(sql, [email]);
     return result;
   }
   
