@@ -5,53 +5,29 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const nodeEnv = process.env.NODE_ENV;
-
-
-const otherConfigs = {
-  connectionLimit: 20,
-  // dateStrings: 'date',
-  multipleStatements: true
-
-}
-
-const config = {
-  host: process.env.DB_HOST || 'localhost',
-  user: process.env.DB_USER || 'root',
-  database: process.env.DB_NAME || 'johnny_store',
-  password: process.env.DB_PASSWORD || '',
-  ...otherConfigs
-};
-
-const herokuconfig = {
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  database: process.env.DB_NAME,
-  password: process.env.DB_PASSWORD,
-  ...otherConfigs
-};
-
-const testconfig = {
-  host: process.env.TRAVIS_HOST,
-  user: process.env.TRAVIS_USER,
-  database: process.env.TRAVIS_DATABASE,
-  password: process.env.TRAVIS_PASSWORD,
-  ...otherConfigs
-};
-
-
-
 let connectionPool: Pool;
-
 
 const getPool = () => {
   if (!connectionPool) {
-    if (nodeEnv === 'development') {
-      connectionPool = mysql.createPool(config);
-    } else if (nodeEnv === 'test') {
-      connectionPool = mysql.createPool(testconfig);
-    } else if (nodeEnv === 'production') {
-      connectionPool = mysql.createPool(herokuconfig);
+    if (process.env.NODE_ENV === 'test') {
+      connectionPool = mysql.createPool({
+        host: process.env.TRAVIS_HOST,
+        user: process.env.TRAVIS_USER,
+        database: process.env.TRAVIS_DATABASE,
+        password: process.env.TRAVIS_PASSWORD,
+        connectionLimit: 20,
+        multipleStatements: true
+      });
+    } else {
+      connectionPool = mysql.createPool({
+        host: process.env.DB_HOST || 'localhost',
+        user: process.env.DB_USER || 'root',
+        database: process.env.DB_NAME || 'johnny_store',
+        password: process.env.DB_PASSWORD || '',
+        connectionLimit: 20,
+        // dateStrings: 'date',
+        multipleStatements: true
+      });
     }
   }
 
@@ -60,8 +36,9 @@ const getPool = () => {
 
 const pool = getPool();
 
-export const query = (sql: string, values: (string|number)[] | null = null) => {
+export const query = (sql: string, values: (string|number)[] | null = null): Promise<any> => {
   return new Promise((resolve, reject) => {
+
     if(Array.isArray(values)){
       pool.query(sql, values, (err, rows) => {
         if(err) reject(err);
@@ -73,6 +50,7 @@ export const query = (sql: string, values: (string|number)[] | null = null) => {
         resolve(rows);
       })
     }
+
   })
 }
 

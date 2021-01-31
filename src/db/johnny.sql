@@ -38,6 +38,8 @@ CREATE TABLE `JohnnyPaymentLog` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+
+/* SEEDED USERS' PASSWORD = pass123 */
 INSERT INTO `JohnnyEmployee` (`id`, `name`, `email`, `password`) VALUES
 (1, "Adrien", "adrien@gmail.com", "$2a$10$crAXT./bH/.a2L70HaHJ5.E/g2Tnkf/UwcnHVP5d35JwedeX3bogy"),
 (2, "Alexis", "alexis@gmail.com", "$2a$10$crAXT./bH/.a2L70HaHJ5.E/g2Tnkf/UwcnHVP5d35JwedeX3bogy"),

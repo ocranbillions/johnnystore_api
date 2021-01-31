@@ -1,27 +1,44 @@
 import { RequestHandler } from 'express';
-import { Employee } from '../models'
+import { compareSync } from 'bcryptjs';
+import { Employee } from '../models';
+import JWT from '../utils/JWT';
+import CustomError from '../utils/CustomError';
+
 
 export const register: RequestHandler = async (req, res, next) => {
+  req.body.email = req.body.email.toLowerCase();
+  const { name, email } = req.body;
+
   try {
+    const existingEmployee = await Employee.findOne(email);
+    
+    if (existingEmployee) throw new CustomError("Email in use!!", 409)
 
     const employee = new Employee(req.body)
-    const result = await employee.create();
 
-    return res.status(201).json({
-      success: true,
-      message: "done",
-      data: result,
-    })
+    const insertId = await employee.create();
 
-  }catch(error) { next(error) }
+    const token = JWT.generate({name, email, id: insertId});
+
+    return res.status(201).json({ token })
+
+  } catch(error) { next(error) }
 }
 
+
 export const login: RequestHandler = async (req, res, next) => {
+  req.body.email = req.body.email.toLowerCase();
+  const { name, email, password } = req.body;
+
   try {
+    const employee = await Employee.findOne(email);
 
-    return res.status(200).json({
-      success: true,
-    })
+    if (!employee || (!compareSync(password, employee.password))) 
+      throw new CustomError("Incorrect login credentials", 401)
 
-  }catch(error) { next(error) }
+    const token = JWT.generate({name, email, id: employee.id!});
+
+    return res.status(200).json({ token })
+
+  } catch(error) { next(error) }
 }
