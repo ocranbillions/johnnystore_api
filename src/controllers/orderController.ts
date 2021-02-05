@@ -1,47 +1,26 @@
 import { RequestHandler } from 'express';
-import { Order, Payment } from '../models';
-
+import { Order, Employee } from '../models';
 
 export const makeOrder: RequestHandler = async (req, res, next) => {
-  const {employeeId, skuId, quantity, totalPrice, paidInBox } = req.body;
+  const { skuId, quantity, paidInBox } = req.body;
+  const { id: employeeId } = req.user;
   try {
 
     // MYSQL TRANSACTION
-    const ord = await Order.initiateTransaction({
+    await Order.initiateTransaction({
       employeeId,
       skuId,
       quantity,
-      totalPrice,
       paidInBox,
     });
 
-    // Update product quantity (skuId, quantity)
+    const unpaidBillForCurrentMonth = await Employee.unpaidBill(+employeeId)
 
-    // if(paymentMade) {
-    //   Payment.create({
-    //     employeeId,
-    //     amount: totalPrice,
-    //   })
-    // }
+    const message = unpaidBillForCurrentMonth ? 
+    `Transaction completed - Your total bill for the current month ${paidInBox ? 'remains' : 'is now'} $${unpaidBillForCurrentMonth}` :
+    'Transaction completed - You do not have any unpaid bills for this months'
 
-    // Update order
-    // await Order.update(ord.id, ord)
-
-    // If payment not made
-      // update employee debt else update employee wallets
-    
-
-
-    return res.status(201).json({ message: "Order successfully made, You now owe a total of $5000 this month", ord })
+    return res.status(201).json({ message })
 
   } catch(error) { next(error) }
 }
-
-
-// highest selling=
-// SELECT skuId, name, SUM(quantity) AS totalSold
-// FROM johnnyorderlog 
-// INNER JOIN johnnysku 
-// ON johnnysku.id = johnnyorderlog.skuId
-// GROUP BY skuId
-// ORDER BY 3 DESC

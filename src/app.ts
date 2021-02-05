@@ -3,7 +3,8 @@ import { config } from 'dotenv';
 import morgan from 'morgan';
 import authRoutes from './routes/authRoutes';
 import productRoutes from './routes/productRoutes';
-import orderRoutes from './routes/orderRoutes';
+import orderRoutes from './routes/orderRoutes'; 
+import billRoutes from './routes/billRoutes'; 
 import CustomError from './utils/CustomError';
 
 config()
@@ -14,6 +15,7 @@ app.use(express.json())
 app.use(morgan("tiny"));
 
 app.use('/auth', authRoutes)
+app.use('/bills', billRoutes)
 app.use('/products', productRoutes)
 app.use('/orders', orderRoutes)
 

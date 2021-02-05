@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express';
 import { compareSync } from 'bcryptjs';
 import { Employee } from '../models';
-import JWT from '../utils/JWT';
+import JWT from '../middlewares/JWT';
 import CustomError from '../utils/CustomError';
 
 
