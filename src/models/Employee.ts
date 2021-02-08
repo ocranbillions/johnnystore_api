@@ -8,6 +8,7 @@ interface EmpoyeeI {
   id?: number
 }
 
+
 export class Employee {
   name: string;
   email: string;
@@ -26,10 +27,26 @@ export class Employee {
     return result.insertId!;
   }
 
+
   static findOne = async(email: string): Promise<EmpoyeeI> => {
     const sql = `SELECT * from JohnnyEmployee WHERE email = ?`;
-    const [result]= await query(sql, [email]);
+    const [result] = await query(sql, [email]);
     return result;
+  }
+
+
+  static unpaidBill = async(empId: number): Promise<number> => {
+    const sql = `
+      SELECT SUM(totalPrice) AS curentMonthTotal FROM johnnyorderlog WHERE paidInBox IS NULL
+      AND employeeId = ?
+      AND time_created > DATE_FORMAT(NOW() ,'%Y-%m-01');
+    `
+    const [result] = await query(sql, [empId])
+
+    if(!result) return 0;
+
+    return result.curentMonthTotal;
+
   }
   
 }
