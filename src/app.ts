@@ -1,13 +1,10 @@
 import express, { Request, Response, NextFunction} from "express";
-import { config } from 'dotenv';
 import morgan from 'morgan';
 import authRoutes from './routes/authRoutes';
 import productRoutes from './routes/productRoutes';
 import orderRoutes from './routes/orderRoutes'; 
 import billRoutes from './routes/billRoutes'; 
 import CustomError from './utils/CustomError';
-
-config()
 
 const app = express();
 
