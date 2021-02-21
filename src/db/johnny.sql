@@ -1,7 +1,7 @@
-DROP TABLE IF EXISTS `JohnnyEmployee`; 
-DROP TABLE IF EXISTS `JohnnySku`; 
 DROP TABLE IF EXISTS `JohnnyOrderLog`; 
 DROP TABLE IF EXISTS `JohnnyPaymentLog`;
+DROP TABLE IF EXISTS `JohnnySku`; 
+DROP TABLE IF EXISTS `JohnnyEmployee`; 
 
 CREATE TABLE `JohnnyEmployee` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -38,6 +38,13 @@ CREATE TABLE `JohnnyPaymentLog` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+ALTER TABLE `JohnnyOrderLog`
+  ADD CONSTRAINT `JohnnyOrderLog_employeeId_JohnnyEmployee_id` FOREIGN KEY (`employeeId`) REFERENCES `JohnnyEmployee` (`id`) ON DELETE CASCADE on UPDATE CASCADE,
+  ADD CONSTRAINT `JohnnyOrderLog_skuId_JohnnySku_id` FOREIGN KEY (`skuId`) REFERENCES `JohnnySku` (`id`) ON DELETE CASCADE on UPDATE CASCADE,
+  ADD CONSTRAINT `JohnnyOrderLog_paidInBox_JohnnyPaymentLog_id` FOREIGN KEY (`paidInBox`) REFERENCES `JohnnyPaymentLog` (`id`) ON DELETE CASCADE on UPDATE CASCADE;
+
+ALTER TABLE `JohnnyPaymentLog`
+  ADD CONSTRAINT `JohnnyPaymentLog_employeeId_JohnnyEmployee_id` FOREIGN KEY (`employeeId`) REFERENCES `JohnnyEmployee` (`id`) ON DELETE CASCADE on UPDATE CASCADE;
 
 /* SEEDED USERS' PASSWORD = pass123 */
 INSERT INTO `JohnnyEmployee` (`id`, `name`, `email`, `password`) VALUES

@@ -36,22 +36,10 @@ export const pool = getPool();
 
 export const query = (sql: string, values: (string|number)[] | null = null): Promise<any> => {
   return new Promise((resolve, reject) => {
-
-    if(Array.isArray(values)){
-      pool.query(sql, values, (err, rows) => {
-        if(err) reject(err);
-        resolve(rows);
-      })
-    }
-
-    // consider taking this out
-    else{
-      pool.query(sql, (err, rows) => {
-        if(err) reject(err);
-        resolve(rows);
-      })
-    }
-
+    pool.query(sql, values, (err, rows) => {
+      if(err) reject(err);
+      resolve(rows);
+    })
   })
 }
 
