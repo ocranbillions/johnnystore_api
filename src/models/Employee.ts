@@ -1,4 +1,4 @@
-import { query } from '../db/dbConfig';
+import { query } from '../db/mysql';
 import { hashSync } from 'bcryptjs';
 
 interface EmpoyeeI {

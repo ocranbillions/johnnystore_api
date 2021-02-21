@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "copy_sql_file": "cp src/db/johnny.sql dist/db/",
-    "build": "tsc && npm run copy_sql_file",
-    "prod:migrate": "node dist/db/dbConfig migrate",
-    "dev:migrate": "ts-node src/db/dbConfig migrate",
+    "build": "rm -rf dist && tsc && npm run copy_sql_file",
+    "prod:migrate": "node dist/db/mysql migrate",
+    "dev:migrate": "ts-node src/db/mysql migrate",
     "start": "node dist/index.js",
     "dev": "nodemon",
     "test": "npm run dev:migrate && jest --coverage --testTimeout=10000",
@@ -24,10 +24,13 @@
     "testEnvironment": "node",
     "preset": "ts-jest",
     "setupFilesAfterEnv": [
-      "./test/setup.ts"
+      "./test/setup.js"
     ],
     "coveragePathIgnorePatterns": [
       "/node_modules/"
+    ],
+    "modulePathIgnorePatterns": [
+      "/dist/"
     ]
   },
   "repository": {
