@@ -1,4 +1,4 @@
-import { query } from '../db/mysql';
+import { query } from '../database/mysql';
 
 interface ProductI {
   id: number

@@ -1,4 +1,4 @@
-const { migrate } = require('../src/db/mysql')
+const { migrate } = require('../src/database/mysql')
 
 beforeAll(async () => {
   console.log("before all")

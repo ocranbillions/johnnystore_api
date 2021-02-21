@@ -1,4 +1,4 @@
-import { query, pool, mysqlConnection } from '../db/mysql';
+import { query, pool, mysqlConnection } from '../database/mysql';
 
 interface OrderI {
   employeeId: number
