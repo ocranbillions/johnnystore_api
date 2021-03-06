@@ -16,6 +16,7 @@ env:
 before_install:
   - mysql -e 'CREATE DATABASE IF NOT EXISTS johnny_store_test;'
 script:
+  - 'npm run dev:migrate'
   - 'npm test'
   - 'npm run coverage'
 services:
