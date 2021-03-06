@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express';
 import { Order, Employee } from '../models';
 
-export const makeOrder: RequestHandler = async (req, res, next) => {
+export const placeOrder: RequestHandler = async (req, res, next) => {
   const { skuId, quantity, paidInBox } = req.body;
   const { id: employeeId } = req.user;
   try {
@@ -17,8 +17,8 @@ export const makeOrder: RequestHandler = async (req, res, next) => {
     const unpaidBillForCurrentMonth = await Employee.unpaidBill(+employeeId)
 
     const message = unpaidBillForCurrentMonth ? 
-    `Transaction completed - Your total bill for the current month ${paidInBox ? 'remains' : 'is now'} $${unpaidBillForCurrentMonth}` :
-    'Transaction completed - You do not have any unpaid bills for this months'
+    `Transaction completed - Your total bill for the current month ${paidInBox ? 'remains' : 'is'} $${unpaidBillForCurrentMonth}` :
+    'Transaction completed - You do not have any unpaid bills for this month'
 
     return res.status(201).json({ message })
 

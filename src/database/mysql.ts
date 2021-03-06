@@ -5,9 +5,9 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-let connectionPool: Pool;
+export let connectionPool: Pool;
 
-const getPool = () => {
+export const getPool = () => {
   if (!connectionPool) {
     if (process.env.NODE_ENV === 'test') {
       connectionPool = mysql.createPool({
@@ -23,12 +23,10 @@ const getPool = () => {
         user: process.env.DB_USER || 'root',
         database: process.env.DB_NAME || 'johnny_store',
         password: process.env.DB_PASSWORD || '',
-        // dateStrings: 'date',
         multipleStatements: true
       });
     }
   }
-
   return connectionPool;
 };
 
@@ -69,7 +67,7 @@ export const mysqlConnection = (): Promise<any> => {
       };
         resolve({ query, release });
     });
-   });
+  });
 };
 
 
@@ -80,11 +78,14 @@ const dataSql = fs.readFileSync(path.join(
   "johnny.sql"
 )).toString();
 
+
+
 export const migrate = async() => {
-  await pool.query(dataSql, (err, res) => {
+  await pool.query(dataSql, async (err, res) => {
     // console.log(err, res)
-    connectionPool.end()
+    await connectionPool.end()
   })
 }
+
 
 require("make-runnable")

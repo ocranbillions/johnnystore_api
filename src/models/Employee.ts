@@ -6,8 +6,8 @@ interface EmpoyeeI {
   email: string
   password: string
   id?: number
+  isAdmin: boolean
 }
-
 
 export class Employee {
   name: string;

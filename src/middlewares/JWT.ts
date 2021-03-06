@@ -2,14 +2,11 @@ import jwt, { Secret } from 'jsonwebtoken';
 import { RequestHandler } from 'express';
 import CustomError from '../utils/CustomError'
 
-// export interface GetUserAuthInfoRequestI extends Request {
-//   user: JwtPayloadI;
-// }
-
 interface JwtPayloadI {
   id: number;
   name: string;
   email: string;
+  isAdmin: boolean;
 }
 
 
@@ -43,6 +40,13 @@ export default class JWT {
     }catch(error) {
       throw new CustomError('Your session expired. Please sign in!', 401)
     }
+  }
+
+  static isAdmin: RequestHandler = (req, res, next) => {
+    if (!req.user.isAdmin) {
+      throw new CustomError('Forbidden!', 403)
+    }
+    return next();
   }
 }
 

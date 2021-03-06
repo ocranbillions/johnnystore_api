@@ -8,9 +8,10 @@
     "build": "rm -rf dist && tsc && npm run copy_sql_file",
     "prod:migrate": "node dist/database/mysql migrate",
     "dev:migrate": "ts-node src/database/mysql migrate",
+    "test:migrate": "export NODE_ENV=test&& ts-node src/database/mysql migrate",
     "start": "node dist/index.js",
     "dev": "nodemon",
-    "test": "npm run dev:migrate && jest --coverage --testTimeout=10000",
+    "test": "jest --coverage",
     "coverage": "coveralls < coverage/lcov.info"
   },
   "nodemonConfig": {
@@ -46,6 +47,7 @@
   "homepage": "https://github.com/ocranbillions/johnnystore_api#readme",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "date-fns": "^2.19.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-validator": "^6.9.2",

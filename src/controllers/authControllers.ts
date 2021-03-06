@@ -18,7 +18,7 @@ export const register: RequestHandler = async (req, res, next) => {
 
     const insertId = await employee.create();
 
-    const token = JWT.generate({name, email, id: insertId});
+    const token = JWT.generate({name, email, id: insertId, isAdmin: false});
 
     return res.status(201).json({ token })
 
@@ -36,7 +36,7 @@ export const login: RequestHandler = async (req, res, next) => {
     if (!employee || (!compareSync(password, employee.password))) 
       throw new CustomError("Incorrect login credentials", 401)
 
-    const token = JWT.generate({name, email, id: employee.id!});
+    const token = JWT.generate({name, email, id: employee.id!, isAdmin: employee.isAdmin});
 
     return res.status(200).json({ token })
 
