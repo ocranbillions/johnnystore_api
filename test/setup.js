@@ -5,10 +5,6 @@ beforeAll(async () => {
   // await migrate();
 });
 
-beforeEach(async () => {
-  console.log("before each")
-});
-
 afterAll(async () => {
   console.log("after all")
   await migrate();

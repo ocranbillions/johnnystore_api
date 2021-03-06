@@ -17,7 +17,7 @@ app.use('/products', productRoutes)
 app.use('/orders', orderRoutes)
 
 app.all('*', (req, res) => {
-  throw new CustomError("Page not found!", 404)
+  throw new CustomError("Route not found!", 404)
 })
 
 app.use((error: Error, req: Request, res: Response, next: NextFunction) => {

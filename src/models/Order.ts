@@ -1,4 +1,5 @@
 import { query, pool, mysqlConnection } from '../database/mysql';
+import CustomError from '../utils/CustomError';
 
 interface OrderI {
   employeeId: number
@@ -16,17 +17,19 @@ export class Order {
     
     const connection = await mysqlConnection();
     try {
-
+      
       await connection.query("START TRANSACTION");
-
-      // Get item stock
       const [item] = await connection.query("SELECT stock, price FROM johnnysku WHERE id = ?", [skuId]);
 
+      if(!item) throw new CustomError(`The item with the id ${skuId} cannot be found`, 404);
+      
+      // Get item stock
       if(item.stock < quantity) {
-        throw Error(item.stock ? `Available qty is ${item.stock}`: "Sorry we're out of stock") // throw custom error instead
+        const msg = item.stock ? `Available qty is ${item.stock}`: "Sorry we're out of stock"
+        throw new CustomError(msg, 400)
       }
 
-      // make order
+      // place order
       const sql = `
         INSERT INTO JohnnyOrderLog (time_created, employeeId, skuId, quantity, totalPrice) 
         VALUES (now(),	?,	?,	?,	?)
@@ -35,7 +38,7 @@ export class Order {
 
       // Update product stock
       const skuUpdateQuery = `UPDATE johnnysku SET stock = (? - ?) WHERE id = ?`;
-      const skuUpdate = await connection.query(skuUpdateQuery, [item.stock, quantity, skuId]);
+      await connection.query(skuUpdateQuery, [item.stock, quantity, skuId]);
 
       let paymentInsert, updateOrderwithPayment;
       if(paidInBox) {
@@ -53,8 +56,6 @@ export class Order {
       }
 
       await connection.query("COMMIT");
-
-      // return {orderResult, skuUpdate, paymentInsert, updateOrderwithPayment};
       return;
 
     } catch (err) {

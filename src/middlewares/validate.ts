@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 import { validationResult } from 'express-validator';
-import CustomError from '../utils/CustomError'
+import CustomError from '../utils/CustomError';
 
 const validate: RequestHandler = (req, res, next) => {
   const errors = validationResult(req)

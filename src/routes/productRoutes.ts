@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import { fetchAvailableStock } from '../controllers/productController';
+import { fetchProducts } from '../controllers/productController';
 
 const router = Router();
 
-router.get('/', fetchAvailableStock);
+router.get('/', fetchProducts);
 
 
 export default router;
