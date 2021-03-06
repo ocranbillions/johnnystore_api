@@ -37,7 +37,7 @@ export class Employee {
 
   static unpaidBill = async(empId: number): Promise<number> => {
     const sql = `
-      SELECT SUM(totalPrice) AS curentMonthTotal FROM johnnyorderlog WHERE paidInBox IS NULL
+      SELECT SUM(totalPrice) AS curentMonthTotal FROM JohnnyOrderLog WHERE paidInBox IS NULL
       AND employeeId = ?
       AND time_created > DATE_FORMAT(NOW() ,'%Y-%m-01');
     `

@@ -19,7 +19,7 @@ export class Order {
     try {
       
       await connection.query("START TRANSACTION");
-      const [item] = await connection.query("SELECT stock, price FROM johnnysku WHERE id = ?", [skuId]);
+      const [item] = await connection.query("SELECT stock, price FROM JohnnySku WHERE id = ?", [skuId]);
 
       if(!item) throw new CustomError(`The item with the id ${skuId} cannot be found`, 404);
       
@@ -37,7 +37,7 @@ export class Order {
       const orderResult = await connection.query(sql, [employeeId, skuId, quantity, (item.price * quantity)]);
 
       // Update product stock
-      const skuUpdateQuery = `UPDATE johnnysku SET stock = (? - ?) WHERE id = ?`;
+      const skuUpdateQuery = `UPDATE JohnnySku SET stock = (? - ?) WHERE id = ?`;
       await connection.query(skuUpdateQuery, [item.stock, quantity, skuId]);
 
       let paymentInsert, updateOrderwithPayment;
