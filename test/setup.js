@@ -4,8 +4,3 @@ beforeAll(async () => {
   console.log("before all")
   // await migrate();
 });
-
-afterAll(async () => {
-  console.log("after all")
-  await migrate();
-});
